@@ -1,19 +1,33 @@
 
-# Author: Mujtaba
+# Author: Mujtaba (GitHub: @mujtaba-io, Email: muhammadmujtaba150@gmail.com)
 # Date: June 2023
 
 # This file is a part of "AI Notes" Version 0.1
-# It implements a basic notepad ui interface which has very limited functionality.
-# It must be noted that it is less likely that I continue development in Tkinter,
-# I have decided to use Flutter for portability, but its not sure.
+# This file is licensed under MIT License (see LICENSE for more details)
+
+# START -
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk, font
 
-class Notepad:
+class AINotes:
     def __init__(self, root):
         self.root = root
-        self.root.title("Notepad")
+        self.root.title("AINotes - Untitled Notebook")
+        
+        # Left-side panel
+        self.left_panel = tk.Frame(self.root)
+        self.left_panel.pack(side="left", fill="y")
+        
+        # Create Page button
+        self.create_page_button = tk.Button(self.left_panel, text="Create Page", command=self.create_page, bg="cyan", relief="flat")
+        self.create_page_button.pack(fill="x")  # Use fill="x" to make the button cover the entire width
+        
+        # List of created pages
+        self.pages_listbox = tk.Listbox(self.left_panel)
+        self.pages_listbox.pack(fill="both", expand=True)
+
+        # Text area
         self.text_area = tk.Text(self.root)
         self.text_area.pack(fill="both", expand=True)
 
@@ -36,7 +50,7 @@ class Notepad:
         self.font_size_var = tk.StringVar()
         self.font_style_var = tk.StringVar()
 
-        self.toggle_button = tk.Button(self.root, text="Disable AI", relief="flat", bg="green", fg="white",
+        self.toggle_button = tk.Button(self.root, text="Disable Copilot", relief="flat", bg="green", fg="white",
                                        font=("Arial", 10, "bold"), command=self.toggle_button_clicked)
 
         self.toggle_button.pack(side="bottom", anchor="se")
@@ -53,15 +67,16 @@ class Notepad:
 
         if self.toggle_button['bg'] == "green":
             self.toggle_button['fg'] = "white"
-            self.toggle_button['text'] = "Disable AI"
+            self.toggle_button['text'] = "Disable Copilot"
         else:
-            self.toggle_button['text'] = "Enable AI"
+            self.toggle_button['text'] = "Enable Copilot"
 
     def create_menus(self):
         menu_bar = tk.Menu(self.root)
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New File", command=self.new_file)
         file_menu.add_command(label="Open File", command=self.open_file)
+        file_menu.add_separator()
         file_menu.add_command(label="Save", command=self.save_file)
         file_menu.add_command(label="Save As", command=self.save_file_as)
         file_menu.add_separator()
@@ -77,6 +92,11 @@ class Notepad:
         menu_bar.add_cascade(label="About", menu=about_menu)
 
         self.root.config(menu=menu_bar)
+
+    def create_page(self):
+        # Create a new page
+        page_name = f"Page {self.pages_listbox.size() + 1}"
+        self.pages_listbox.insert(tk.END, page_name)
 
     def new_file(self):
         self.text_area.delete("1.0", "end")
@@ -160,16 +180,21 @@ class Notepad:
         font_style = self.font_style_var.get()
         self.text_area.configure(font=(font_style, font_size))
 
+        # Update the cursor information
+        self.update_cursor_info(None)
+
         # Update window size based on the text area content
         text_width = self.text_area.winfo_width()
         text_height = self.text_area.winfo_height()
 
         # Adjust the window height to accommodate the additional labels
         line_label_height = self.line_label.winfo_height()
-        self.root.geometry(f"{text_width}x{text_height + line_label_height}")
+        window_height = text_height + line_label_height
 
-        # Update the cursor information
-        self.update_cursor_info(None)
+        # Update the window dimensions
+        self.root.geometry(f"{text_width}x{window_height}")
+
+
 
     def show_credits(self):
         messagebox.showinfo("Credits", "Original Author: Mujtaba\nThis software is made for students and content creators.")
@@ -186,5 +211,7 @@ class Notepad:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    notepad = Notepad(root)
+    notepad = AINotes(root)
     root.mainloop()
+
+# - END
