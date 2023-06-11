@@ -1,3 +1,6 @@
+// Author: Mujtaba
+// Date: June 2023
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,6 +30,7 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   String _currentText = '';
   int _lineCount = 0;
   int _cursorPosition = 0;
+  bool _isCopilotEnabled = true;
 
   @override
   void initState() {
@@ -50,34 +54,48 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   }
 
   void _newFile() {
-    // Implement the logic for creating a new file here
+// Implement the logic for creating a new file here
   }
 
   void _openFile() {
-    // Implement the logic for opening a file here
+// Implement the logic for opening a file here
   }
 
   void _saveFile() {
-    // Implement the logic for saving the file here
+// Implement the logic for saving the file here
   }
 
   void _openSettings() {
-    // Implement the logic for opening settings here
+// Implement the logic for opening settings here
   }
 
   void _openAbout() {
-    // Implement the logic for opening the about page here
+// Implement the logic for opening the about page here
   }
 
   void _exitApp() {
-    // Implement the logic for exiting the app here
+// Implement the logic for exiting the app here
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text Editor'),
+        title: Text('AI Notes'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              _saveFile();
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              _openSettings();
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -147,6 +165,7 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
               padding: EdgeInsets.all(8.0),
               child: TextField(
                 controller: _textEditingController,
+                minLines: 128,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
@@ -164,6 +183,23 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
                 Text('Cursor: $_cursorPosition'),
                 SizedBox(width: 16.0),
                 Text('Characters: ${_currentText.length}'),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isCopilotEnabled = !_isCopilotEnabled;
+                    });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      _isCopilotEnabled ? Colors.green : Colors.red,
+                    ),
+                  ),
+                  child: Text(
+                    _isCopilotEnabled ? 'Disable Copilot' : 'Enable Copilot',
+                  ),
+                ),
+                const SizedBox(width: 8.0),
               ],
             ),
           ),
